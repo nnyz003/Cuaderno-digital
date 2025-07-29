@@ -451,3 +451,64 @@ function mostrarPuntajeFinal() {
     <p>${mensaje}</p>
   `;
 }
+let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+
+function agregarEvento() {
+  const titulo = document.getElementById("titulo-evento").value.trim();
+  const fecha = document.getElementById("fecha-evento").value;
+  const hora = document.getElementById("hora-evento").value;
+  const tipo = document.getElementById("tipo-evento").value;
+  const descripcion = document.getElementById("descripcion-evento").value.trim();
+
+  if (!titulo || !fecha || !hora) {
+    return alert("Completa al menos el título, la fecha y la hora.");
+  }
+
+  const evento = {
+    id: Date.now(),
+    titulo,
+    fecha,
+    hora,
+    tipo,
+    descripcion
+  };
+
+  eventos.push(evento);
+  localStorage.setItem("eventos", JSON.stringify(eventos));
+  mostrarEventos();
+  verificarAlarmas();
+  
+  // Limpiar
+  document.getElementById("titulo-evento").value = "";
+  document.getElementById("fecha-evento").value = "";
+  document.getElementById("hora-evento").value = "";
+  document.getElementById("tipo-evento").value = "clase";
+  document.getElementById("descripcion-evento").value = "";
+}
+
+function mostrarEventos(filtro = "") {
+  const contenedor = document.getElementById("lista-eventos");
+  contenedor.innerHTML = "";
+
+  const filtrados = eventos.filter(e => {
+    const texto = `${e.titulo} ${e.fecha} ${e.descripcion}`.toLowerCase();
+    return texto.includes(filtro.toLowerCase());
+  });
+
+  filtrados.sort((a, b) => new Date(`${a.fecha}T${a.hora}`) - new Date(`${b.fecha}T${b.hora}`));
+
+  filtrados.forEach(e => {
+    const div = document.createElement("div");
+    div.className = `evento ${e.tipo}`;
+    div.innerHTML = `
+      <strong>${e.titulo} (${e.tipo})</strong>
+      <small>🗓️ ${e.fecha} ⏰ ${e.hora}</small><br>
+      <em>${e.descripcion}</em>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+document.getElementById("buscar-evento").addEventListener("input", e => {
+  mostrarEventos(e.target.value);
+});
