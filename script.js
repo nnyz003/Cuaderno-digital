@@ -242,3 +242,93 @@ function graficarNotas() {
 }
 
 graficarNotas();
+let examenes = JSON.parse(localStorage.getItem("examenes")) || [];
+
+function registrarExamen() {
+  const materia = document.getElementById("materia-examen").value.trim();
+  const nota = parseFloat(document.getElementById("nota-examen").value);
+  const fecha = document.getElementById("fecha-examen").value;
+  const error = document.getElementById("error-examen").value.trim();
+
+  if (!materia || isNaN(nota) || nota < 1 || nota > 5 || !fecha || !error) {
+    return alert("Por favor completa todos los campos correctamente.");
+  }
+
+  const examen = { materia, nota, fecha, error };
+  examenes.push(examen);
+  localStorage.setItem("examenes", JSON.stringify(examenes));
+  mostrarExamenes();
+  mostrarFraseExamen(nota);
+  graficarExamenes();
+
+  // Limpiar
+  document.getElementById("materia-examen").value = "";
+  document.getElementById("nota-examen").value = "";
+  document.getElementById("fecha-examen").value = "";
+  document.getElementById("error-examen").value = "";
+}
+
+function mostrarFraseExamen(nota) {
+  const fraseDiv = document.getElementById("frase-examen");
+  if (nota < 3.0) {
+    fraseDiv.textContent = "🔴 ¡No pasa nada, Melany! Aprende del error y sigue adelante 💪";
+  } else if (nota === 3.0) {
+    fraseDiv.textContent = "🟡 Regular... ¡A practicar más y mejorar! ✨";
+  } else {
+    fraseDiv.textContent = "🟢 ¡Buen trabajo, Melany! Vas por buen camino 🌈";
+  }
+}
+
+function mostrarExamenes() {
+  const contenedor = document.getElementById("lista-examenes");
+  contenedor.innerHTML = "";
+
+  examenes.forEach(ex => {
+    const div = document.createElement("div");
+    div.className = "examen";
+    div.innerHTML = `
+      <b>${ex.materia}</b> - Nota: ${ex.nota} - Fecha: ${ex.fecha}
+      <br><i>💡 En qué fallaste:</i> ${ex.error}
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function graficarExamenes() {
+  const ctx = document.getElementById("grafico-examenes").getContext("2d");
+  const etiquetas = examenes.map(e => `${e.materia} (${e.fecha})`);
+  const notas = examenes.map(e => e.nota);
+  const colores = notas.map(n => {
+    if (n < 3) return "#ff4d4d";
+    if (n === 3) return "#ffd700";
+    return "#32cd32";
+  });
+
+  if (window.graficoExamenes) window.graficoExamenes.destroy();
+
+  window.graficoExamenes = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: etiquetas,
+      datasets: [{
+        label: 'Nota por Examen',
+        data: notas,
+        fill: false,
+        borderColor: '#c71585',
+        backgroundColor: colores,
+        tension: 0.2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          min: 1,
+          max: 5
+        }
+      }
+    }
+  });
+}
+
+mostrarExamenes();
+graficarExamenes();
