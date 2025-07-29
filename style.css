@@ -83,20 +83,65 @@ button:hover {
   right: 80px;
   background-color: #6a5acd;
 }
-<section id="tareas">
-  <h2>🗓️ Tareas por Prioridad</h2>
-  <input type="text" id="titulo-tarea" placeholder="Título de la tarea">
-  <input type="date" id="fecha-tarea">
-  <select id="prioridad-tarea">
-    <option value="alta">🔴 Alta</option>
-    <option value="media">🟡 Media</option>
-    <option value="baja">🟢 Baja</option>
-  </select>
-  <textarea id="descripcion-tarea" placeholder="Descripción o detalles..."></textarea>
-  <input type="file" id="imagen-tarea" accept="image/*">
-  <button onclick="agregarTarea()">Agregar Tarea</button>
+#tareas {
+  margin-top: 40px;
+  padding: 15px;
+  border-radius: 12px;
+  background-color: #ffe6f0;
+  border: 2px solid #dda0dd;
+  width: 90%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  <input type="text" id="buscar-tarea" placeholder="🔍 Buscar tareas...">
+#tareas select {
+  padding: 10px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 10px;
+  border: 2px solid #dda0dd;
+  margin: 10px auto;
+  display: block;
+}
 
-  <div id="lista-tareas"></div>
-</section>
+.tarea {
+  background-color: #fffafd;
+  border: 2px solid #e8b0d7;
+  padding: 15px;
+  margin: 10px 0;
+  border-left: 10px solid;
+  border-radius: 10px;
+  position: relative;
+}
+
+.tarea img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.tarea.alta { border-left-color: #ff4d4d; }
+.tarea.media { border-left-color: #ffd700; }
+.tarea.baja { border-left-color: #32cd32; }
+
+.tarea .acciones {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.tarea .acciones button {
+  margin-left: 5px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.completada {
+  background-color: #dff0d8 !important;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
