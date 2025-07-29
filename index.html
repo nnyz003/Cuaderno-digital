@@ -56,3 +56,12 @@
   <canvas id="grafico-notas" width="400" height="200"></canvas>
 </section>
 <script src="chart.min.js"></script>
+<section id="examenes">
+  <h2>🧪 Registro de Exámenes</h2>
+  <input type="text" id="materia-examen" placeholder="Materia del examen">
+  <input type="number" id="nota-examen" min="1" max="5" step="0.1" placeholder="Nota (1.0 a 5.0)">
+  <input type="date" id="fecha-examen">
+  <textarea id="error-examen" placeholder="¿En qué fallaste o qué debes mejorar?"></textarea>
+  <button onclick="registrarExamen()">Registrar Examen</button>
+  <div id="frase-examen"></div>
+  <div id="lista-examen
