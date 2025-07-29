@@ -346,6 +346,35 @@ function guardarFlashcard() {
   if (!pregunta || !respuesta) {
     return alert("Escribe la pregunta y su respuesta");
   }
+  function mostrarFlashcardsGuardadas() {
+  const contenedor = document.getElementById("lista-flashcards");
+  contenedor.innerHTML = "";
+
+  if (flashcards.length === 0) {
+    contenedor.innerHTML = "<p>❌ No tienes flashcards guardadas.</p>";
+    return;
+  }
+
+  flashcards.forEach((card, index) => {
+    const div = document.createElement("div");
+    div.className = "card-item";
+    div.innerHTML = `
+      <strong>❓ ${card.pregunta}</strong><br>
+      <em>✅ ${card.respuesta}</em>
+      <button onclick="borrarFlashcard(${index})">Eliminar</button>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function borrarFlashcard(index) {
+  if (confirm("¿Estás segura de eliminar esta flashcard?")) {
+    flashcards.splice(index, 1);
+    localStorage.setItem("flashcards", JSON.stringify(flashcards));
+    mostrarFlashcardsGuardadas();
+    alert("Flashcard eliminada correctamente 🗑️");
+  }
+}
 
   flashcards.push({ pregunta, respuesta });
   localStorage.setItem("flashcards", JSON.stringify(flashcards));
