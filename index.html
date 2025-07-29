@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuaderno Digital - Melany</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>📘 Cuaderno Digital - ITM</h1>
+    <input type="text" id="buscador" placeholder="🔍 Buscar por materia o tema...">
+  </header>
+
+  <main>
+    <section id="formulario">
+      <h2>✏️ Agregar Apunte</h2>
+      <input type="text" id="materia" placeholder="Materia (Ej: Geometría)">
+      <input type="text" id="tema" placeholder="Tema (Ej: Vectores)">
+      <textarea id="contenido" placeholder="Escribe tu apunte aquí..."></textarea>
+      <input type="file" id="imagen" accept="image/*">
+      <button onclick="guardarApunte()">Guardar Apunte</button>
+    </section>
+
+    <section id="apuntes">
+      <h2>📚 Mis Apuntes</h2>
+      <div id="lista-apuntes"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
