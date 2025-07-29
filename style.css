@@ -272,64 +272,38 @@ button:hover {
   padding: 5px 10px;
   cursor: pointer;
 }
-let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
-
-function agregarEvento() {
-  const titulo = document.getElementById("titulo-evento").value.trim();
-  const fecha = document.getElementById("fecha-evento").value;
-  const hora = document.getElementById("hora-evento").value;
-  const tipo = document.getElementById("tipo-evento").value;
-  const descripcion = document.getElementById("descripcion-evento").value.trim();
-
-  if (!titulo || !fecha || !hora) {
-    return alert("Completa al menos el título, la fecha y la hora.");
-  }
-
-  const evento = {
-    id: Date.now(),
-    titulo,
-    fecha,
-    hora,
-    tipo,
-    descripcion
-  };
-
-  eventos.push(evento);
-  localStorage.setItem("eventos", JSON.stringify(eventos));
-  mostrarEventos();
-  verificarAlarmas();
-  
-  // Limpiar
-  document.getElementById("titulo-evento").value = "";
-  document.getElementById("fecha-evento").value = "";
-  document.getElementById("hora-evento").value = "";
-  document.getElementById("tipo-evento").value = "clase";
-  document.getElementById("descripcion-evento").value = "";
+#calendario {
+  margin-top: 40px;
+  padding: 20px;
+  border: 2px solid #dda0dd;
+  border-radius: 12px;
+  background-color: #ffe0f0;
+  width: 90%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
-function mostrarEventos(filtro = "") {
-  const contenedor = document.getElementById("lista-eventos");
-  contenedor.innerHTML = "";
-
-  const filtrados = eventos.filter(e => {
-    const texto = `${e.titulo} ${e.fecha} ${e.descripcion}`.toLowerCase();
-    return texto.includes(filtro.toLowerCase());
-  });
-
-  filtrados.sort((a, b) => new Date(`${a.fecha}T${a.hora}`) - new Date(`${b.fecha}T${b.hora}`));
-
-  filtrados.forEach(e => {
-    const div = document.createElement("div");
-    div.className = `evento ${e.tipo}`;
-    div.innerHTML = `
-      <strong>${e.titulo} (${e.tipo})</strong>
-      <small>🗓️ ${e.fecha} ⏰ ${e.hora}</small><br>
-      <em>${e.descripcion}</em>
-    `;
-    contenedor.appendChild(div);
-  });
+.evento {
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  background-color: #fff;
+  border-left: 10px solid;
+  text-align: left;
 }
 
-document.getElementById("buscar-evento").addEventListener("input", e => {
-  mostrarEventos(e.target.value);
-});
+.evento.clase { border-left-color: #9370db; }
+.evento.tarea { border-left-color: #ff69b4; }
+.evento.parcial { border-left-color: #ff4500; }
+.evento.otro { border-left-color: #dda0dd; }
+
+.evento strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.1em;
+  color: #800080;
+}
