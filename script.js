@@ -78,3 +78,96 @@ document.getElementById("buscador").addEventListener("input", (e) => {
 });
 
 mostrarApuntes();
+let tareas = JSON.parse(localStorage.getItem("tareas_prioridad")) || [];
+
+function agregarTarea() {
+  const titulo = document.getElementById("titulo-tarea").value.trim();
+  const fecha = document.getElementById("fecha-tarea").value;
+  const prioridad = document.getElementById("prioridad-tarea").value;
+  const descripcion = document.getElementById("descripcion-tarea").value.trim();
+  const imagenInput = document.getElementById("imagen-tarea");
+  const archivo = imagenInput.files[0];
+
+  if (!titulo || !fecha || !descripcion) {
+    return alert("Completa todos los campos.");
+  }
+
+  const lector = new FileReader();
+  lector.onloadend = function () {
+    const tarea = {
+      id: Date.now(),
+      titulo,
+      fecha,
+      prioridad,
+      descripcion,
+      imagen: lector.result || "",
+      completada: false
+    };
+    tareas.push(tarea);
+    localStorage.setItem("tareas_prioridad", JSON.stringify(tareas));
+    mostrarTareas();
+    limpiarFormularioTarea();
+  };
+
+  if (archivo) {
+    lector.readAsDataURL(archivo);
+  } else {
+    lector.onloadend(); // llamada sin imagen
+  }
+}
+
+function mostrarTareas(filtro = "") {
+  const contenedor = document.getElementById("lista-tareas");
+  contenedor.innerHTML = "";
+
+  const tareasFiltradas = tareas
+    .filter(t => t.titulo.toLowerCase().includes(filtro) || t.descripcion.toLowerCase().includes(filtro))
+    .sort((a, b) => {
+      const prioridades = { alta: 1, media: 2, baja: 3 };
+      return prioridades[a.prioridad] - prioridades[b.prioridad];
+    });
+
+  tareasFiltradas.forEach(t => {
+    const div = document.createElement("div");
+    div.className = `tarea ${t.prioridad} ${t.completada ? "completada" : ""}`;
+    div.innerHTML = `
+      <strong>${t.titulo}</strong> (${t.fecha})<br>
+      <small>${t.descripcion}</small>
+      ${t.imagen ? `<img src="${t.imagen}">` : ""}
+      <div class="acciones">
+        <button onclick="completarTarea(${t.id})">✅</button>
+        <button onclick="eliminarTarea(${t.id})">🗑️</button>
+      </div>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function completarTarea(id) {
+  const tarea = tareas.find(t => t.id === id);
+  if (tarea) {
+    tarea.completada = !tarea.completada;
+    localStorage.setItem("tareas_prioridad", JSON.stringify(tareas));
+    mostrarTareas();
+  }
+}
+
+function eliminarTarea(id) {
+  tareas = tareas.filter(t => t.id !== id);
+  localStorage.setItem("tareas_prioridad", JSON.stringify(tareas));
+  mostrarTareas();
+}
+
+function limpiarFormularioTarea() {
+  document.getElementById("titulo-tarea").value = "";
+  document.getElementById("fecha-tarea").value = "";
+  document.getElementById("prioridad-tarea").value = "media";
+  document.getElementById("descripcion-tarea").value = "";
+  document.getElementById("imagen-tarea").value = "";
+}
+
+document.getElementById("buscar-tarea").addEventListener("input", (e) => {
+  mostrarTareas(e.target.value.toLowerCase());
+});
+
+mostrarTareas();
