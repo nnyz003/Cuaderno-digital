@@ -76,4 +76,22 @@
   <h3>🗃️ Mis Flashcards Guardadas</h3>
   <div id="lista-flashcards"></div>
 </section>
+<section id="calendario">
+  <h2>📅 Calendario de Clases, Tareas y Parciales</h2>
+  
+  <input type="text" id="titulo-evento" placeholder="Nombre del evento">
+  <input type="date" id="fecha-evento">
+  <input type="time" id="hora-evento">
+  <select id="tipo-evento">
+    <option value="clase">📚 Clase</option>
+    <option value="tarea">📝 Tarea</option>
+    <option value="parcial">🧪 Parcial</option>
+    <option value="otro">📌 Otro</option>
+  </select>
+  <textarea id="descripcion-evento" placeholder="Descripción..."></textarea>
+  <button onclick="agregarEvento()">Agregar Evento</button>
+
+  <input type="text" id="buscar-evento" placeholder="🔍 Buscar eventos por texto o fecha (YYYY-MM-DD)">
+  <div id="lista-eventos"></div>
+</section>
       
