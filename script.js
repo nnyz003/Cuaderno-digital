@@ -512,3 +512,19 @@ function mostrarEventos(filtro = "") {
 document.getElementById("buscar-evento").addEventListener("input", e => {
   mostrarEventos(e.target.value);
 });
+function verificarAlarmas() {
+  const ahora = new Date();
+  eventos.forEach(e => {
+    const fechaEvento = new Date(`${e.fecha}T${e.hora}`);
+    const diferencia = fechaEvento - ahora;
+
+    if (diferencia > 0 && diferencia < 60000) { // menos de 1 minuto
+      alert(`🔔 ¡Tienes un evento pronto! ${e.titulo} a las ${e.hora}`);
+    }
+  });
+}
+
+// Ejecutar al cargar
+mostrarEventos();
+verificarAlarmas();
+setInterval(verificarAlarmas, 60000); // verificar cada minuto
