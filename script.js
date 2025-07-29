@@ -171,3 +171,74 @@ document.getElementById("buscar-tarea").addEventListener("input", (e) => {
 });
 
 mostrarTareas();
+let notas = JSON.parse(localStorage.getItem("notas")) || [];
+
+function guardarNota() {
+  const materia = document.getElementById("materia-nota").value.trim();
+  const valor = parseFloat(document.getElementById("valor-nota").value);
+
+  if (!materia || isNaN(valor) || valor < 1 || valor > 5) {
+    return alert("Escribe la materia y una nota válida (1.0 a 5.0)");
+  }
+
+  // Verifica si ya existe la materia
+  const existente = notas.find(n => n.materia.toLowerCase() === materia.toLowerCase());
+  if (existente) {
+    existente.nota = valor;
+  } else {
+    notas.push({ materia, nota: valor });
+  }
+
+  localStorage.setItem("notas", JSON.stringify(notas));
+  mostrarFrase(valor);
+  graficarNotas();
+  document.getElementById("materia-nota").value = "";
+  document.getElementById("valor-nota").value = "";
+}
+
+function mostrarFrase(nota) {
+  const fraseDiv = document.getElementById("frase-motivadora");
+  if (nota < 3.0) {
+    fraseDiv.textContent = "🔴 No te rindas, Melany. Cada error te acerca a mejorar 💪";
+  } else if (nota === 3.0) {
+    fraseDiv.textContent = "🟡 Regular... ¡puedes dar más, confía en ti! ✨";
+  } else {
+    fraseDiv.textContent = "🟢 ¡Sigue así, Melany! ¡Eres capaz de todo! 🌟";
+  }
+}
+
+function graficarNotas() {
+  const ctx = document.getElementById('grafico-notas').getContext('2d');
+  const materias = notas.map(n => n.materia);
+  const valores = notas.map(n => n.nota);
+  const colores = valores.map(nota => {
+    if (nota < 3) return "#ff4d4d";
+    if (nota === 3) return "#ffd700";
+    return "#32cd32";
+  });
+
+  if (window.graficoNotas) window.graficoNotas.destroy(); // Evitar gráficos duplicados
+
+  window.graficoNotas = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: materias,
+      datasets: [{
+        label: 'Nota',
+        data: valores,
+        backgroundColor: colores,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          suggestedMin: 1,
+          suggestedMax: 5
+        }
+      }
+    }
+  });
+}
+
+graficarNotas();
