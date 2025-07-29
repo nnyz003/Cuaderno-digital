@@ -201,3 +201,39 @@ button:hover {
 .examen b {
   color: #c71585;
 }
+#flashcards {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #ffe0f0;
+  border: 2px solid #dda0dd;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#crear-flashcard input {
+  margin: 5px;
+  padding: 10px;
+  width: 80%;
+  border-radius: 10px;
+  border: 1px solid #c090d0;
+}
+
+#juego-flashcards {
+  margin-top: 20px;
+}
+
+#pregunta-juego {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #6a006a;
+}
+
+#resultado-flashcard {
+  margin-top: 10px;
+  font-weight: bold;
+}
