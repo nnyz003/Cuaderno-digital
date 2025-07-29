@@ -332,3 +332,93 @@ function graficarExamenes() {
 
 mostrarExamenes();
 graficarExamenes();
+let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+let juego = {
+  preguntas: [],
+  indice: 0,
+  correctas: 0
+};
+
+function guardarFlashcard() {
+  const pregunta = document.getElementById("pregunta").value.trim();
+  const respuesta = document.getElementById("respuesta").value.trim();
+
+  if (!pregunta || !respuesta) {
+    return alert("Escribe la pregunta y su respuesta");
+  }
+
+  flashcards.push({ pregunta, respuesta });
+  localStorage.setItem("flashcards", JSON.stringify(flashcards));
+  document.getElementById("pregunta").value = "";
+  document.getElementById("respuesta").value = "";
+  alert("Flashcard agregada con éxito 📚");
+}
+
+function empezarJuego() {
+  if (flashcards.length === 0) {
+    return alert("Primero agrega algunas flashcards.");
+  }
+
+  // Mezclar aleatoriamente
+  juego.preguntas = flashcards.sort(() => Math.random() - 0.5);
+  juego.indice = 0;
+  juego.correctas = 0;
+  document.getElementById("puntaje-final").textContent = "";
+  document.getElementById("resultado-flashcard").textContent = "";
+  document.getElementById("juego-flashcards").style.display = "block";
+  mostrarPregunta();
+}
+
+function mostrarPregunta() {
+  const actual = juego.preguntas[juego.indice];
+  document.getElementById("pregunta-juego").textContent = actual.pregunta;
+  document.getElementById("respuesta-juego").value = "";
+}
+
+function verificarRespuesta() {
+  const actual = juego.preguntas[juego.indice];
+  const respuestaUsuario = document.getElementById("respuesta-juego").value.trim().toLowerCase();
+  const resultado = document.getElementById("resultado-flashcard");
+
+  if (respuestaUsuario === actual.respuesta.toLowerCase()) {
+    resultado.textContent = "✅ ¡Correcto!";
+    resultado.style.color = "green";
+    juego.correctas++;
+  } else {
+    resultado.textContent = `❌ Incorrecto. La respuesta era: ${actual.respuesta}`;
+    resultado.style.color = "red";
+  }
+
+  juego.indice++;
+  if (juego.indice < juego.preguntas.length) {
+    setTimeout(() => {
+      resultado.textContent = "";
+      mostrarPregunta();
+    }, 1500);
+  } else {
+    mostrarPuntajeFinal();
+  }
+}
+
+function mostrarPuntajeFinal() {
+  const total = juego.preguntas.length;
+  const correctas = juego.correctas;
+  const porcentaje = (correctas / total) * 100;
+  let mensaje = "";
+
+  if (porcentaje === 100) {
+    mensaje = "🎉 ¡Perfecto! ¡Eres una crack, Melany!";
+  } else if (porcentaje >= 70) {
+    mensaje = "🌟 Muy bien hecho. ¡Sigue así!";
+  } else if (porcentaje >= 40) {
+    mensaje = "🔁 Puedes mejorar. ¡Practica más!";
+  } else {
+    mensaje = "😥 ¡No te rindas! La práctica hace al genio.";
+  }
+
+  document.getElementById("juego-flashcards").style.display = "none";
+  document.getElementById("puntaje-final").innerHTML = `
+    <h3>Puntaje Final: ${correctas}/${total} (${porcentaje.toFixed(0)}%)</h3>
+    <p>${mensaje}</p>
+  `;
+}
